@@ -10,10 +10,12 @@ ENV HA_VER_MAJOR=1.6 \
     HA_VER_MINOR=0 \
     HA_OPTS="TARGET=linux2628 USE_PCRE=1 USE_OPENSSL=1 USE_ZLIB=1"
 
-RUN cd /usr/local/src/ && \
+RUN cd /opt && \
     wget -O haproxy.tar.gz http://www.haproxy.org/download/${HA_VER_MAJOR}/src/haproxy-${HA_VER_MAJOR}.${HA_VER_MINOR}.tar.gz && \
     tar xfvz haproxy.tar.gz && \
-    cd haproxy-${HA_VER_MAJOR}.${HA_VER_MINOR} && \
+    rm haproxy.tar.gz && \
+    mv haproxy-${HA_VER_MAJOR}.${HA_VER_MINOR} haproxy && \
+    cd haproxy && \
     make -j4 ${HA_OPTS} && \
     make install || echo "Done setting up HA-Proxy"
 
