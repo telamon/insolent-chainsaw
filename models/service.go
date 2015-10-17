@@ -69,6 +69,9 @@ func CreateService(image string) (*Service, error) {
 	return &service, nil
 }
 
+/* Latches onto a runing container matched by container.Image
+* and populates the container.Current with gathered data
+ */
 func (t *Service) Latch() error {
 	t.ensureState(Initializing)
 	containers, err := Client.ListContainers(docker.ListContainersOptions{})
