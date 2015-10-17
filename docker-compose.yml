@@ -1,0 +1,11 @@
+serviceA:
+    image: busybox
+    volumes:
+     - "$PWD/:/src"
+    ports:
+     - "80:80"
+    environment:
+        VIRTUAL_HOST: a.test.com
+        VIRTUAL_PATH: /app/kek/
+        TEST_VAR: bananas
+    command: watch -n 4 date
