@@ -47,7 +47,4 @@ RUN mkdir -p /app/certs
 ADD nginx.tmpl /app/
 ADD wharfmaster /app/
 
-
-ENV NGINX_CONF="/app/nginx.conf"
-
 CMD ["./wharfmaster"]

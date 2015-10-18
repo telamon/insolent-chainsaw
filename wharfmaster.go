@@ -3,7 +3,7 @@ package wharfmaster
 import (
 	"fmt"
 	. "github.com/telamon/wharfmaster/models"
-	"os"
+	//"os"
 	"os/exec"
 	//	"path"
 )
@@ -32,7 +32,10 @@ func RegenerateConf() (bool, error) {
 var nginx *exec.Cmd
 
 func StartNginx() (*exec.Cmd, error) {
-	cmd := exec.Command("nginx", "-c", os.Getenv("NGINX_CONF"), "-g \"daemon off;\"")
+	daemon := "off"
+	workers := 2
+	pidfile := "/app/nginx.pid"
+	cmd := exec.Command("nginx", "-c", "nginx.conf", fmt.Sprintf("-g \"daemon %s;worker_processes %d;pid %s;\"", daemon, workers, pidfile))
 	nginx = cmd
 	return cmd, cmd.Start()
 }
