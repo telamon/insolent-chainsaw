@@ -1,7 +1,5 @@
 dummy:
     image: busybox
-    volumes:
-     - "$PWD/:/src"
     environment:
         VIRTUAL_HOST: a.test.com
         VIRTUAL_PATH: /app/kek/

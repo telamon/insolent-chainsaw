@@ -1,12 +1,11 @@
 package wharfmaster_test
 
 import (
-	_ "github.com/telamon/wharfmaster"
+	. "github.com/telamon/wharfmaster"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/telamon/wharfmaster/models"
-	"github.com/telamon/wharfmaster/util"
 )
 
 var _ = Describe("Service", func() {
@@ -36,7 +35,7 @@ var _ = Describe("Service", func() {
 	})
 	Context("Docker-gen interaction", func() {
 		It("should generate a new configuration", func() {
-			_, err := util.RegenerateConf()
+			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
 		})
 	})

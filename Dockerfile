@@ -44,7 +44,10 @@ EXPOSE 80 443
 
 WORKDIR /app
 RUN mkdir -p /app/certs
+ADD nginx.tmpl /app/
+ADD wharfmaster /app/
+
 
 ENV NGINX_CONF="/app/nginx.conf"
 
-CMD ["nginx", "-g", "-f $NGINX_CONF" ,"daemon off;"]
+CMD ["./wharfmaster"]
