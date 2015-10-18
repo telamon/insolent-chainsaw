@@ -1,0 +1,14 @@
+FROM node:slim
+
+
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+RUN npm install
+COPY . /usr/src/app
+
+EXPOSE 7890
+RUN echo "1.0.0" > /version.txt
+CMD [ "node", "." ]
+

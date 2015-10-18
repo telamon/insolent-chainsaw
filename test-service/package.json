@@ -1,0 +1,14 @@
+{
+  "name": "version-repeater",
+  "version": "1.0.0",
+  "description": "A slow service that only responds with version tags",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tony Ivanov <telamohn@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}

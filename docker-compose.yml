@@ -1,4 +1,4 @@
-serviceA:
+dummy:
     image: busybox
     volumes:
      - "$PWD/:/src"
@@ -9,3 +9,9 @@ serviceA:
         VIRTUAL_PATH: /app/kek/
         TEST_VAR: bananas
     command: watch -n 4 date
+
+versionrepeater:
+    image: telamon/wharftest-version:1.1.0
+    environment:
+        VIRTUAL_HOST: what.version.io
+        VIRTUAL_PATH: /app/kek/
