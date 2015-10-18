@@ -2,8 +2,6 @@ dummy:
     image: busybox
     volumes:
      - "$PWD/:/src"
-    ports:
-     - "80:80"
     environment:
         VIRTUAL_HOST: a.test.com
         VIRTUAL_PATH: /app/kek/
@@ -15,3 +13,9 @@ versionrepeater:
     environment:
         VIRTUAL_HOST: what.version.io
         VIRTUAL_PATH: /app/kek/
+
+app:
+    build: .
+    volumes:
+     - "$PWD:/app"
+     - "/var/run/docker.sock:/tmp/docker.sock"
