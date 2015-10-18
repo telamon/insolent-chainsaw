@@ -5,9 +5,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	//"github.com/ryanfaerman/fsm"
-	//docker "github.com/fsouza/go-dockerclient"
 	. "github.com/telamon/wharfmaster/models"
+	"github.com/telamon/wharfmaster/util"
 )
 
 var _ = Describe("Service", func() {
@@ -33,6 +32,12 @@ var _ = Describe("Service", func() {
 			service, err := CreateServiceFromImage("")
 			Expect(err).To(HaveOccurred())
 			Expect(service.State).To(Equal(Borked))
+		})
+	})
+	Context("Docker-gen interaction", func() {
+		It("should generate a new configuration", func() {
+			_, err := util.RegenerateConf()
+			Expect(err).ToNot(HaveOccurred())
 		})
 	})
 
