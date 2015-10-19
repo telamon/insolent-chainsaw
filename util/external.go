@@ -19,17 +19,6 @@ func RegenerateConf() (bool, error) {
 	return true, nil
 }
 
-func StartNginx() error {
-	//nginxCmd := exec.Command("nginx", "-c", "/app/nginx.conf")
-	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf")
-	out, err := cmd.CombinedOutput()
-	fmt.Printf("Started nginx:\n%s", out)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func NginxPID() (int, error) {
 	b, err := ioutil.ReadFile("nginx.pid")
 	if err == nil {
@@ -51,7 +40,32 @@ func nginxProc() (*os.Process, error) {
 	return nil, err
 }
 
+func StartNginx() error {
+	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf")
+	out, err := cmd.CombinedOutput()
+	fmt.Printf("Started nginx:\n%s", out)
+	if err != nil {
+		return err
+	}
+	// TODO: wait for nginx to boot up
+	return nil
+}
+
 func StopNginx() error {
+	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf -s stop")
+	out, err := cmd.CombinedOutput()
+	fmt.Printf("%s", out)
+	return err
+}
+
+func ReloadNginx() error {
+	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf -s reload")
+	out, err := cmd.CombinedOutput()
+	fmt.Printf("%s", out)
+	return err
+}
+
+func KillNginx() error {
 	proc, err := nginxProc()
 	if err != nil {
 		return err

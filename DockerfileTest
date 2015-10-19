@@ -1,4 +1,5 @@
 FROM wharfmaster_app
+# This Dockerfile is work in progress.
 
 WORKDIR /
 # gcc for cgo
@@ -6,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		g++ \
 		gcc \
 		libc6-dev \
-		make 
+		make
 
 ENV GOLANG_VERSION 1.5.1
 ENV GOLANG_DOWNLOAD_URL https://golang.org/dl/go$GOLANG_VERSION.linux-amd64.tar.gz
