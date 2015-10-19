@@ -9,18 +9,8 @@ import (
 	"strings"
 )
 
-func cmdWrapper(line string) *exec.Cmd {
-	var cmd *exec.Cmd
-	if os.Getenv("GO_ENV") == "testing" {
-		cmd = exec.Command("./exec-wrapper.sh", line)
-	} else {
-		s := strings.SplitN(line, " ", 2)
-		cmd = exec.Command(s[0], s[1])
-	}
-	return cmd
-}
 func RegenerateConf() (bool, error) {
-	cmd := cmdWrapper("docker-gen nginx.tmpl nginx.conf")
+	cmd := exec.Command("docker-gen", "nginx.tmpl", "nginx.conf")
 	out, err := cmd.CombinedOutput()
 	fmt.Printf("Output:\n%s", out)
 	if err != nil {
@@ -28,38 +18,45 @@ func RegenerateConf() (bool, error) {
 	}
 	return true, nil
 }
+
 func StartNginx() error {
-	cmd := cmdWrapper("nginx -c /app/nginx.conf")
+	//nginxCmd := exec.Command("nginx", "-c", "/app/nginx.conf")
+	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf")
 	out, err := cmd.CombinedOutput()
-	fmt.Printf("Output:\n%s", out)
+	fmt.Printf("Started nginx:\n%s", out)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func NginxPID() int {
+
+func NginxPID() (int, error) {
 	b, err := ioutil.ReadFile("nginx.pid")
 	if err == nil {
 		p, err := strconv.Atoi(strings.TrimSpace(string(b)))
 		if err == nil {
-			return p
+			return p, nil
 		}
 	}
-	return -1
+	return -1, err
 }
-func StopNginx() {
-	pid := NginxPID()
+func nginxProc() (*os.Process, error) {
+	pid, err := NginxPID()
 	if pid == -1 {
-		return
+		return nil, err
 	}
-	if os.Getenv("GO_ENV") == "testing" {
-		cmd := exec.Command("./exec-wrapper.sh", fmt.Sprintf("kill %d", pid))
-		out, _ := cmd.CombinedOutput()
-		fmt.Printf("Output:\n%s", out)
-	} else {
-		if proc, err := os.FindProcess(pid); err == nil {
-			fmt.Printf("Sending kill signal to NGinX (%d)", pid)
-			proc.Kill()
-		}
+	if proc, err := os.FindProcess(pid); err == nil {
+		return proc, nil
 	}
+	return nil, err
+}
+
+func StopNginx() error {
+	proc, err := nginxProc()
+	if err != nil {
+		return err
+	}
+	fmt.Printf("Sending kill signal to NGinX (%#v)", proc)
+	proc.Kill()
+	return nil
 }

@@ -34,12 +34,12 @@ var _ = Describe("Service", func() {
 			Expect(service.State).To(Equal(Borked))
 		})
 	})
-	Context("Docker-gen interaction", func() {
+	Context("External interactions", func() {
 		It("should generate a new configuration", func() {
 			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
 		})
-		PIt("should be able to start and stop nginx", func() {
+		It("should be able to start and stop nginx", func() {
 			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
 			Println("Attempting to start nginx")
@@ -47,6 +47,8 @@ var _ = Describe("Service", func() {
 			Expect(NginxPID()).ToNot(Equal(-1))
 			Println("Attempting to stop nginx")
 			StopNginx()
+			Expect(NginxPID()).To(Equal(-1))
+
 		})
 	})
 
