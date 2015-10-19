@@ -1,6 +1,6 @@
-
-#worker_processes  2;
-#pid        /app/nginx.pid;
+daemon on;
+worker_processes  2;
+pid        /app/nginx.pid;
 
 events {
     worker_connections  1024;

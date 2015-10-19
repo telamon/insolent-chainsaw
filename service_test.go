@@ -1,7 +1,7 @@
 package wharfmaster_test
 
 import (
-	_ "github.com/telamon/wharfmaster"
+	. "github.com/telamon/wharfmaster"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -35,9 +35,14 @@ var _ = Describe("Service", func() {
 	})
 	Context("Docker-gen interaction", func() {
 		It("should generate a new configuration", func() {
-			// TODO: figure out a good way to run testsuite inside container
-			//_, err := RegenerateConf()
-			//Expect(err).ToNot(HaveOccurred())
+			_, err := RegenerateConf()
+			Expect(err).ToNot(HaveOccurred())
+		})
+		It("should be able to start and stop nginx", func() {
+			_, err := RegenerateConf()
+			Expect(err).ToNot(HaveOccurred())
+			err = StartNginx()
+			Expect(NginxPID()).ToNot(Equal(-1))
 		})
 	})
 

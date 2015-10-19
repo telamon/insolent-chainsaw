@@ -5,7 +5,8 @@ import (
 )
 
 func main() {
-	_, err := RegenerateConf()
+	New().Start(5000)
+	/*_, err := RegenerateConf()
 	if err != nil {
 		panic(err)
 	}
@@ -14,5 +15,5 @@ func main() {
 		panic(err)
 	}
 	defer StopNginx()
-	nginx.Wait()
+	nginx.Wait()*/
 }

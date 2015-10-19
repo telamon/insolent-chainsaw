@@ -1,5 +1,7 @@
 nginx.conf
+nginx.pid
 certs/*
 /wharfmaster
 /docker-gen*
+
 
