@@ -17,3 +17,6 @@ app:
     volumes:
      - "$PWD:/app"
      - "/var/run/docker.sock:/tmp/docker.sock"
+    ports:
+     - "80:80"
+     - "443:443"

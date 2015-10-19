@@ -3,9 +3,9 @@ package wharfmaster_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/telamon/wharfmaster"
+	wharfmaster "github.com/telamon/wharfmaster"
+	util "github.com/telamon/wharfmaster/util"
 	"os"
-	//dio "github.com/telamon/wharfmaster/util/dio"
 	"testing"
 )
 
@@ -17,7 +17,7 @@ func TestWharfmaster(t *testing.T) {
 		os.Setenv("GO_ENV", "testing")
 	})
 	AfterSuite(func() {
-		wharfmaster.StopNginx()
+		util.StopNginx()
 	})
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Wharfmaster Suite")
