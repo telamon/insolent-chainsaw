@@ -4,7 +4,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	wharfmaster "github.com/telamon/wharfmaster"
-	util "github.com/telamon/wharfmaster/util"
 	"os"
 	"testing"
 )

@@ -33,15 +33,31 @@ var _ = Describe("Service", func() {
 			Expect(err).To(HaveOccurred())
 			Expect(service.State).To(Equal(Borked))
 		})
+		PIt("should know how to clone run-flags", func() {
+
+		})
 	})
-	PContext("External interactions", func() {
+	Context("External interactions", func() {
 		It("should generate a new configuration", func() {
 			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
 		})
 		It("should be able reload nginx", func() {
-			_, err := NginxReload()
+			workers, err := NginxWorkerPids()
 			Expect(err).ToNot(HaveOccurred())
+			c := make(chan error)
+			go func() {
+				c <- ReloadNginx()
+			}()
+			err = <-c
+			Expect(err).ToNot(HaveOccurred())
+			workersNew, err := NginxWorkerPids()
+			Expect(err).ToNot(HaveOccurred())
+			for _, op := range workers {
+				for _, np := range workersNew {
+					Expect(op).NotTo(Equal(np))
+				}
+			}
 		})
 	})
 
