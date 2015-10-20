@@ -40,11 +40,16 @@ RUN curl -o docker-gen.tar.gz -L $DOWNLOAD_URL \
     && tar -C /usr/local/bin -xvzf docker-gen.tar.gz \
     && rm docker-gen.tar.gz
 
-EXPOSE 80 443
+# Install Forego
+#RUN curl -o /usr/local/bin/forego https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego \
+# && chmod u+x /usr/local/bin/forego
+
+EXPOSE 80 443 5000
 
 WORKDIR /app
-RUN mkdir -p /app/certs
-ADD nginx.tmpl /app/
-ADD wharfmaster /app/
+VOLUME /opt/nginx/certs
 
-CMD ["./wharfmaster"]
+ADD vhosts.tmpl wharfmaster entrypoint.sh /app/
+ADD nginx.conf /opt/nginx/conf/nginx.conf
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["/app/wharfmaster"]

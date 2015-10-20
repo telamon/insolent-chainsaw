@@ -1,27 +1,3 @@
-daemon on;
-worker_processes  2;
-pid        /app/nginx.pid;
-
-events {
-    worker_connections  1024;
-}
-
-http {
-    include       /opt/nginx/conf/mime.types;
-    default_type  application/octet-stream;
-
-    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
-    #                  '$status $body_bytes_sent "$http_referer" '
-    #                  '"$http_user_agent" "$http_x_forwarded_for"';
-
-
-    sendfile        on;
-    #tcp_nopush     on;
-
-    #keepalive_timeout  0;
-    keepalive_timeout  65;
-
-    #gzip  on;
 
 	{{ define "upstream" }}
 		{{ if .Address }}
@@ -83,14 +59,14 @@ http {
 		return 503;
 	}
 
-	{{ if (and (exists "/app/certs/default.crt") (exists "/app/certs/default.key")) }}
+	{{ if (and (exists "/opt/nginx/certs/default.crt") (exists "/opt/nginx/certs/default.key")) }}
 	server {
 		server_name _; # This is just an invalid value which will never trigger on a real hostname.
 		listen 443 ssl spdy;
 		return 503;
 
-		ssl_certificate /app/certs/default.crt;
-		ssl_certificate_key /app/certs/default.key;
+		ssl_certificate /opt/nginx/certs/default.crt;
+		ssl_certificate_key /opt/nginx/certs/default.key;
 	}
 	{{ end }}
 
@@ -135,7 +111,7 @@ http {
 	{{/* Use the cert specifid on the container or fallback to the best vhost match */}}
 	{{ $cert := (coalesce $certName $vhostCert) }}
 
-	{{ if (and (ne $cert "") (exists (printf "/app/certs/%s.crt" $cert)) (exists (printf "/app/certs/%s.key" $cert))) }}
+	{{ if (and (ne $cert "") (exists (printf "/opt/nginx/certs/%s.crt" $cert)) (exists (printf "/opt/nginx/certs/%s.key" $cert))) }}
 
 	server {
 		server_name {{ $host }};
@@ -156,11 +132,11 @@ http {
 		ssl_session_timeout 5m;
 		ssl_session_cache shared:SSL:50m;
 
-		ssl_certificate /app/certs/{{ (printf "%s.crt" $cert) }};
-		ssl_certificate_key /app/certs/{{ (printf "%s.key" $cert) }};
+		ssl_certificate /opt/nginx/certs/{{ (printf "%s.crt" $cert) }};
+		ssl_certificate_key /opt/nginx/certs/{{ (printf "%s.key" $cert) }};
 
-		{{ if (exists (printf "/app/certs/%s.dhparam.pem" $cert)) }}
-		ssl_dhparam {{ printf "/app/certs/%s.dhparam.pem" $cert }};
+		{{ if (exists (printf "/opt/nginx/certs/%s.dhparam.pem" $cert)) }}
+		ssl_dhparam {{ printf "/opt/nginx/certs/%s.dhparam.pem" $cert }};
 		{{ end }}
 
 		add_header Strict-Transport-Security "max-age=31536000";
@@ -211,18 +187,17 @@ http {
 		}
 	}
 
-	{{ if (and (exists "/app/certs/default.crt") (exists "/app/certs/default.key")) }}
+	{{ if (and (exists "/opt/nginx/certs/default.crt") (exists "/opt/nginx/certs/default.key")) }}
 	server {
 		server_name {{ $host }};
 		listen 443 ssl spdy {{ $default_server }};
 		access_log /opt/nginx/logs/access.log vhost;
 		return 503;
 
-		ssl_certificate /app/certs/default.crt;
-		ssl_certificate_key /app/certs/default.key;
+		ssl_certificate /opt/nginx/certs/default.crt;
+		ssl_certificate_key /opt/nginx/certs/default.key;
 	}
 	{{ end }}
 
 	{{ end }}
 	{{ end }}
-}

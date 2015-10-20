@@ -34,7 +34,7 @@ var _ = Describe("Service", func() {
 			Expect(service.State).To(Equal(Borked))
 		})
 	})
-	Context("External interactions", func() {
+	PContext("External interactions", func() {
 		It("should generate a new configuration", func() {
 			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
