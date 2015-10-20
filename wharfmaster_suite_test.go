@@ -17,7 +17,6 @@ func TestWharfmaster(t *testing.T) {
 		os.Setenv("GO_ENV", "testing")
 	})
 	AfterSuite(func() {
-		util.StopNginx()
 	})
 	RegisterFailHandler(Fail)
 	RunSpecs(t, "Wharfmaster Suite")

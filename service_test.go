@@ -39,16 +39,9 @@ var _ = Describe("Service", func() {
 			_, err := RegenerateConf()
 			Expect(err).ToNot(HaveOccurred())
 		})
-		It("should be able to start and stop nginx", func() {
-			_, err := RegenerateConf()
+		It("should be able reload nginx", func() {
+			_, err := NginxReload()
 			Expect(err).ToNot(HaveOccurred())
-			Println("Attempting to start nginx")
-			err = StartNginx()
-			Expect(NginxPID()).ToNot(Equal(-1))
-			Println("Attempting to stop nginx")
-			StopNginx()
-			Expect(NginxPID()).To(Equal(-1))
-
 		})
 	})
 

@@ -10,7 +10,7 @@ import (
 )
 
 func RegenerateConf() (bool, error) {
-	cmd := exec.Command("docker-gen", "nginx.tmpl", "nginx.conf")
+	cmd := exec.Command("docker-gen", "vhosts.tmpl", "vhosts.conf")
 	out, err := cmd.CombinedOutput()
 	fmt.Printf("Output:\n%s", out)
 	if err != nil {
@@ -40,37 +40,9 @@ func nginxProc() (*os.Process, error) {
 	return nil, err
 }
 
-func StartNginx() error {
-	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf")
-	out, err := cmd.CombinedOutput()
-	fmt.Printf("Started nginx:\n%s", out)
-	if err != nil {
-		return err
-	}
-	// TODO: wait for nginx to boot up
-	return nil
-}
-
-func StopNginx() error {
-	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf -s stop")
-	out, err := cmd.CombinedOutput()
-	fmt.Printf("%s", out)
-	return err
-}
-
 func ReloadNginx() error {
-	cmd := exec.Command("sh", "-c", "nginx -c /app/nginx.conf -s reload")
+	cmd := exec.Command("sh", "-c", "nginx -s reload")
 	out, err := cmd.CombinedOutput()
 	fmt.Printf("%s", out)
 	return err
-}
-
-func KillNginx() error {
-	proc, err := nginxProc()
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Sending kill signal to NGinX (%#v)", proc)
-	proc.Kill()
-	return nil
 }
