@@ -2,4 +2,5 @@ nginx.pid
 /wharfmaster
 /docker-gen*
 vhosts.conf
+golang.tar.gz
 
