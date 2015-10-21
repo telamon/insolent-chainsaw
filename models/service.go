@@ -5,6 +5,7 @@ import (
 	"fmt"
 	docker "github.com/fsouza/go-dockerclient"
 	. "github.com/kr/pretty"
+	"regexp"
 )
 
 const (
@@ -134,3 +135,24 @@ func (t *Service) Latch(cid string) error {
 	t.transition(Running)
 	return nil
 }
+
+func (t *Version) MigrateConfigTo(tag string) *docker.CreateContainerOptions {
+	var hostconfig docker.HostConfig
+	var config docker.Config
+	config = *t.Container.Config
+
+	// Set new tag to be used
+	r, _ := regexp.Compile(":[^:]+$")
+	config.Image = r.ReplaceAllString(config.Image, ":"+tag)
+
+	hostconfig = *t.Container.HostConfig
+
+	c := docker.CreateContainerOptions{
+		Name:       t.Container.Name,
+		Config:     &config,
+		HostConfig: &hostconfig,
+	}
+	return &c
+}
+
+func (t *Service) Redeploy(tag string) {}
