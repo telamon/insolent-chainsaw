@@ -33,6 +33,8 @@ var _ = Describe("Service", func() {
 			Expect(err).To(HaveOccurred())
 			Expect(service.State).To(Equal(Borked))
 		})
+	})
+	Context("Initiating a redeploy", func() {
 		It("should know how to clone container confiuration", func() {
 			service, err := CreateServiceFromImage("telamon/wharftest-version:1.1.0")
 			Expect(err).NotTo(HaveOccurred())
@@ -46,8 +48,24 @@ var _ = Describe("Service", func() {
 		PIt("should go into state `pulling` when signaled to redeploy", func() {
 			service, err := CreateServiceFromImage("telamon/wharftest-version:1.1.0")
 			Expect(err).NotTo(HaveOccurred())
-			service.Redeploy("1.2.0")
-			Expect(service.State == Pulling)
+			err = service.Redeploy("1.2.0")
+			//Expect(service.State).To(Equal(Pulling))
+			Expect(err).NotTo(HaveOccurred())
+			Expect(service.State).To(Equal(Pulled))
+		})
+	})
+	Context("The migration", func() {
+		It("Should launch a new container", func() {
+			service, err := CreateServiceFromImage("telamon/wharftest-version:1.1.0")
+			Expect(err).NotTo(HaveOccurred())
+			originalVersion := service.Current
+			err = service.Migrate("1.2.0")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(service.State).To(Equal(Cleaning))
+			Expect(service.Previous).NotTo(BeNil())
+			//Expect(service.Current.Container.ID).NotTo(Equal(originalVersion.Container.ID))
+			Expect(service.Current.Image).NotTo(BeNil())
+			Expect(service.Current.Image.ID).NotTo(Equal(originalVersion.Image.ID))
 		})
 	})
 	Context("External interactions", func() {
